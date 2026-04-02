@@ -6,7 +6,7 @@ Ferramenta interna para visualizar agentes, traces e diagnóstico via IA da plat
 
 | Arquivo | Versão | Descrição |
 |---|---|---|
-| `senior-agent-debug.html` | v0.15.2 | Frontend single-page (servido pelo proxy) |
+| `senior-agent-debug.html` | v0.15.3 | Frontend single-page (servido pelo proxy) |
 | `proxy.py` | v1.3.0 | Proxy local Flask — serve o HTML, repassa chamadas ao MLflow e Gemini |
 | `skill-login.md` | — | Documentação do fluxo de autenticação Senior |
 | `senior-design-system-SKILL.md` | v1.0.0 | Skill reutilizável com tokens do Design System Senior |
@@ -48,12 +48,15 @@ Senior Platform (Homologx)
 
 ## Changelog
 
+### senior-agent-debug.html v0.15.3 — 2026-04-02
+- **Fix:** Removido `system_instruction` do payload Gemini — campo não existe no endpoint `v1`
+- System prompt agora injetado como primeiro par `user`/`model` no array `contents`, compatível com todos os modelos na API v1
+
 ### senior-agent-debug.html v0.15.2 — 2026-04-02
 - **Rename:** Arquivo renomeado de `senior-iassist.html` para `senior-agent-debug.html`
-- **Rename:** Nome do app alterado de "iAssist" / "Senior iAssist" para "Agent Debug" / "Senior Agent Debug" em toda a interface (navbars, tela de login, bookmarklet, alertas, prompts do Gemini)
+- **Rename:** Nome do app alterado de "iAssist" / "Senior iAssist" para "Agent Debug" / "Senior Agent Debug" em toda a interface
 - Chaves de storage atualizadas: `senior_iassist_token` → `senior_agent_debug_token`, `senior_iassist_wiki` → `senior_agent_debug_wiki`
 - Prefixo de log `[iAssist]` → `[AgentDebug]`
-- URLs de API externas (endpoints Senior) não alteradas
 
 ### proxy.py v1.3.0 — 2026-04-02
 - **Rename:** Referências a `senior-iassist.html` atualizadas para `senior-agent-debug.html`
@@ -63,11 +66,11 @@ Senior Platform (Homologx)
 - **Feat:** Suporte a autenticação via postMessage (plataforma Senior embarcada em iframe)
 - Detecta automaticamente execução em iframe (`window.parent !== window`)
 - Envia `{ type: 'TALENT_MINING_READY' }` ao parent ao inicializar
-- Recebe payload `{ token, servicesUrl }` da plataforma e aplica o token no input e na sessão
-- Token via postMessage salvo em `sessionStorage` (nunca `localStorage`, conforme boas práticas Senior)
-- Validação de origem: aceita apenas domínios `*.senior.com.br` e mesma origin (dev local)
+- Recebe payload `{ token, servicesUrl }` da plataforma e aplica o token na sessão
+- Token via postMessage salvo em `sessionStorage` (nunca `localStorage`)
+- Validação de origem: aceita apenas domínios `*.senior.com.br` e mesma origin
 - Fallback após 2s: tenta `sessionStorage` → `localStorage` → tela de login
-- `loadStored()` agora prioriza `sessionStorage` sobre `localStorage`
+- `loadStored()` prioriza `sessionStorage` sobre `localStorage`
 - `doLogout()` limpa ambos `sessionStorage` e `localStorage`
 
 ### senior-agent-debug.html v0.15.0 — 2026-04-02
@@ -76,7 +79,7 @@ Senior Platform (Homologx)
 - Fontes: Inter (headings) + Open Sans (body) via Google Fonts
 - Background da página: #F3F4F6 (gray-10 Senior)
 - Border-radius migrado para escala Senior: 4px inputs, 6px cards, 10px containers
-- Sombras com sistema de elevação Senior (--shadow-sm/md/lg/xl/2xl)
+- Sombras com sistema de elevação Senior
 - Botões: font-weight 400 Open Sans, filter brightness() no hover
 - Tabs ativas: azul primário #5B9BD5
 - Status badges: tokens --color-green/red/orange com bordas semitransparentes
@@ -85,7 +88,7 @@ Senior Platform (Homologx)
 - Cards com box-shadow de elevação e transição hover
 
 ### proxy.py v1.2.0 — 2026-04-02
-- Versão atualizada no comentário de cabeçalho e no print do console ao inicializar
+- Versão atualizada no comentário de cabeçalho e no print do console
 
 ### proxy.py v1.1.0 — 2026-04-02
 - **Fix:** Default do modelo atualizado para gemini-2.5-flash
@@ -108,5 +111,5 @@ Senior Platform (Homologx)
 
 ### senior-design-system-SKILL.md v1.0.0 — 2026-04-02
 - **Novo:** Skill criada com todos os tokens do Design System Senior
-- Inclui: CSS variables, tipografia (Inter + Open Sans), paleta completa (primária, grayscale, feedback), espaçamentos 4px, border-radius, sombras (dp scale) e specs de todos os componentes
+- Inclui: CSS variables, tipografia, paleta completa, espaçamentos, border-radius, sombras e specs de componentes
 - Checklist de migração para aplicar o design em arquivos HTML existentes

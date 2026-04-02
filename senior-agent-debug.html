@@ -1,4 +1,4 @@
-<!-- v0.15.2 -->
+<!-- v0.15.3 -->
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -593,7 +593,7 @@ let S = {
 };
 
 /* ─── Helpers ───────────────────────────────────────── */
-const APP_VERSION = '0.15.2';
+const APP_VERSION = '0.15.3';
 const $  = id => document.getElementById(id);
 const esc = s  => String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
 const highlight = (t,q) => !q ? esc(t) : esc(t).replace(new RegExp(q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'gi'), m=>`<mark>${m}</mark>`);
@@ -1773,8 +1773,14 @@ async function diagCallGemini(userText, isAuto=false){
   const thinking = diagAppendMsg('assistant', '⏳ Analisando…', true);
 
   // Build messages for Gemini
+  // system_instruction nao eh suportado pelo endpoint v1 — injetamos o system prompt
+  // como primeira mensagem user seguida de uma resposta model sintetica,
+  // garantindo compatibilidade com qualquer modelo na API v1.
   const systemPrompt = buildDiagSystemPrompt();
-  const messages = [];
+  const messages = [
+    { role: 'user',  parts: [{ text: systemPrompt }] },
+    { role: 'model', parts: [{ text: 'Entendido. Estou pronto para analisar.' }] },
+  ];
   diagState.history.forEach(h => {
     messages.push({ role: h.role === 'user' ? 'user' : 'model', parts:[{text: h.text}] });
   });
@@ -1785,8 +1791,6 @@ async function diagCallGemini(userText, isAuto=false){
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({
-
-        system_instruction: { parts: [{ text: systemPrompt }] },
         contents: messages,
         generationConfig: { temperature: 0.3, maxOutputTokens: 2048 },
       }),
