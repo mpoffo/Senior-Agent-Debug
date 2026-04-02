@@ -1,0 +1,35 @@
+{
+    "domain": "platform",
+    "service": "iassist",
+    "menu": {
+        "children": [
+            {
+                "id": "group-iassist-sara",
+                "label": "Sara Agentes",
+                "labelI18n": "platform.backend.menu_group_iassist_sara",
+                "children": [
+                    {
+                        "id": "group-iassist",
+                        "label": "Cadastros",
+                        "labelI18n": "platform.backend.menu_group_iassist",
+                        "children": [
+                            {
+                                "id": "debug-agentes",
+                                "label": "Debug de Agentes",
+                                "path": {
+                                    "category": "CurrentTab",
+									"withCredentials":true,
+                                    "menuId": "http://127.0.0.1:5000/"
+                                },
+                                "auth": {
+                                    "resource": "res://senior.com.br/platform/iassist/agent",
+                                    "permission": "READ"
+                                }
+                            }
+                        ]
+                    }
+                ]
+            }
+        ]
+    }
+}
