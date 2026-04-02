@@ -1,4 +1,4 @@
-# Senior iAssist
+# Senior Agent Debug
 
 Ferramenta interna para visualizar agentes, traces e diagnóstico via IA da plataforma Senior iAssist (ambiente Homologx).
 
