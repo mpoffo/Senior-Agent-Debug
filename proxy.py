@@ -1,6 +1,6 @@
-# v1.2.0
+# v1.3.0
 """
-Senior iAssist — Proxy local
+Senior Agent Debug — Proxy local
 Serve o HTML, repassa chamadas ao MLflow, Gemini e Wiki Senior.
 
 Uso:
@@ -19,7 +19,7 @@ MLFLOW_BASE    = "http://agentx-homolog-mlflow-alb-1239989404.us-east-1.elb.amaz
 GEMINI_API_KEY   = os.environ.get("GEMINI_API_KEY", "")
 GEMINI_MODEL     = os.environ.get("GEMINI_MODEL", "gemini-2.5-flash")
 GEMINI_BASE_URL  = "https://generativelanguage.googleapis.com/v1/models"
-HTML_FILE        = os.path.join(os.path.dirname(__file__), "senior-iassist.html")
+HTML_FILE        = os.path.join(os.path.dirname(__file__), "senior-agent-debug.html")
 
 def cors(h):
     h["Access-Control-Allow-Origin"]  = "*"
@@ -37,7 +37,7 @@ def fwd_headers(headers):
 # ── HTML ───────────────────────────────────────────────────────────────────────
 @app.route("/")
 def index():
-    return send_from_directory(os.path.dirname(HTML_FILE), "senior-iassist.html")
+    return send_from_directory(os.path.dirname(HTML_FILE), "senior-agent-debug.html")
 
 # ── MLflow proxy ───────────────────────────────────────────────────────────────
 @app.route("/mlflow/<path:path>", methods=["GET","POST","PUT","DELETE","OPTIONS"])
@@ -82,7 +82,7 @@ def gemini_proxy():
 if __name__ == "__main__":
     key_ok = bool(GEMINI_API_KEY)
     print("=" * 62)
-    print("  Senior iAssist  —  http://127.0.0.1:5000  [proxy v1.2.0]")
+    print("  Senior Agent Debug  —  http://127.0.0.1:5000  [proxy v1.3.0]")
     print(f"  Gemini API Key : {'OK configurada' if key_ok else 'NAO configurada'}")
     print(f"  Gemini Model   : {GEMINI_MODEL}")
     if not key_ok:
